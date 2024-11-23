@@ -11,6 +11,7 @@ import (
 
 const (
 	KeyEnter     byte = 13
+	KeyEscape    byte = 27
 	KeySpace     byte = 32
 	KeyBackspace byte = 127
 
@@ -23,6 +24,30 @@ const (
 	MoveCursorLeft string = "\033[D"
 	MoveCursorUp   string = "\033[A"
 )
+
+type ExitBuf struct {
+	buf [3]byte
+	idx int
+}
+
+func NewExitBuf() *ExitBuf {
+	return &ExitBuf{
+		buf: [3]byte{},
+		idx: 0,
+	}
+}
+
+func (eb *ExitBuf) Insert(input byte) {
+	eb.buf[eb.idx] = input
+	eb.idx++
+	if eb.idx > 2 {
+		eb.idx = 0
+	}
+}
+
+func (eb *ExitBuf) ShouldExit() bool {
+	return eb.buf[0] == KeyEscape && eb.buf[1] == ':' && eb.buf[2] == 'q'
+}
 
 type CursorPos struct {
 	row int
@@ -92,6 +117,8 @@ func main() {
 	fmt.Printf(ClearScreen)
 	fmt.Printf("\033[0;0H")
 
+	exitBuf := NewExitBuf()
+
 	for {
 		buf := make([]byte, 1)
 		_, err = os.Stdin.Read(buf)
@@ -101,7 +128,9 @@ func main() {
 		}
 
 		input := buf[0]
-		if input == 'q' {
+
+		exitBuf.Insert(input)
+		if exitBuf.ShouldExit() {
 			return
 		}
 
