@@ -1,0 +1,15 @@
+version: '3'
+tasks:
+  build:
+    silent: true
+    aliases: [b]
+    desc: build ttedit for current platform
+    cmds:
+      - go build -v -o ./bin/ttedit ./main.go
+
+  clean:
+    silent: true
+    desc: clean project
+    cmds:
+      - rm -rf ./bin
+      - go clean
