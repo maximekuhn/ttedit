@@ -7,6 +7,14 @@ tasks:
     cmds:
       - go build -v -o ./bin/ttedit ./main.go
 
+  run:
+    silent: true
+    aliases: [r]
+    deps: [build]
+    desc: run ttedit
+    cmds:
+      - ./bin/ttedit
+
   clean:
     silent: true
     desc: clean project
