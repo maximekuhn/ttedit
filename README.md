@@ -1,9 +1,8 @@
 # ttedit
 
-- [Golang](https://go.dev/) - v1.23.x
-- [Taskfile](https://taskfile.dev/)
-
-To get started, check all available tasks:
+Usage:
 ```shell
-task --list-all
+make
+./out/ttedit
 ```
+
